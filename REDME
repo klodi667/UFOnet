@@ -1,0 +1,128 @@
+
+
+
+sudo apt update
+
+sudo apt-get update
+
+apt-get install wget
+
+dpkg -l | grep wget
+
+
+wget --version
+
+wget "https://https://drive.google.com/drive/u/0/folders/1VEsPdwtuCN5DXrbBOBsA7gS0AEBEgT6M"
+
+cd ufonet
+
+./ufonet --update
+
+./ufonet --check-tor
+
+./ufonet -s 'proxy.php?url=' --sa
+
+./ufonet --sd 'botnet/dorks.txt'
+
+./ufonet --download-zombies
+
+./ufonet -t botnet/zombies.txt
+
+./ufonet -i http://192.168.1.97
+
+./ufonet -a http://192.168.1.97 -r 10 -b "icons/ubuntu-logo.png"
+
+--------------------------------------------------------------------------------------------
+Next, we will update UFONet:
+
+./ufonet --update
+
+
+Configure Tor (Optional)
+If we were using UFONet to DDoS a target, we would set up Tor and run:
+
+./ufonet --check-tor
+
+
+Find Vulnerable Hosts
+Now we'll use the search function to find vulnerable hosts. UFONet uses only Bing by default to locate vulnerable hosts. This can be changed with flags. I will be using all of the available engines built into UFOnet to search for a vulnerable host.
+
+./ufonet -s 'proxy.php?url=' --sa
+
+
+This command tells UFOnet to search for sites containing "proxy.php?url=", using all built-in search engines. Sites containing "proxy.php?url=" may be vulnerable to open redirects. You can also load search strings from a text file with the command:
+
+./ufonet --sd 'botnet/dorks.txt'
+This command uses UFOnet's dorks.txt as a list of strings to search for potential open redirect vulnerabilities.
+
+
+Since none of these sites have asked me to test whether or not they are vulnerable to open redirects, I did not check the hosts. If we had selected "Yes," UFONet would have checked the remote hosts ensuring that they are vulnerable to open redirects.
+
+Another option for locating targets is downloading the community zombie file from UFONet. I can't verify the validity of this list, but it's worth a shot.
+
+./ufonet --download-zombies
+
+
+
+
+Testing
+We now have a large list of zombies available to us. Since the hosts provided by the community are not under my control, I cleared the community hosts that I downloaded from my bots list and set up a vulnerable page in a VM (virtual machine). This page is a simple open redirect and belongs in the botnet/zombies.txt file.
+
+UFOnet stores data on vulnerable hosts in text format in the botnet folder. Each text file has a themed name, and represents a different form of open redirect.
+
+Zombie: HTTP GET 'Open Redirect' bot
+Droid: HTTP GET 'Open Redirect' bot with parameters
+Alien: HTTP POST 'Open Redirect' bot
+UCAV: These sites check whether the target of the DDoS is up
+Dorks: A list of potentially vulnerable search strings
+
+
+Next, I test that my VM is vulnerable to an open redirect.
+
+./ufonet -t botnet/zombies.txt
+
+
+
+
+
+
+Looks like it's working.
+
+Inspect Our Target
+We may want to inspect our target for large files. Luckily, UFONet has the functionality built in:
+
+./ufonet -i http://192.168.1.97
+Focusing on larger files is not a necessary step, though it may eat more bandwidth from the target site wreaking a bit more havoc. Since my VM consists of two hosted pages, the default Apache page, and the vulnerable open redirect page, this command isn't going to discover anything major. Though, in some cases, you may discover large files.
+
+
+
+I inspected my vulnerable web server. It looks like the largest file on my web server is "ubuntu-logo.png". It appears UFONet has followed an external link off my site though. If I hadn't read through the information presented to me, I could have potentially attacked the wrong target! Tools can report the wrong information, so it's important to pay attention.
+
+
+Launch an Attack
+Lastly, I will launch:
+
+./ufonet -a http://192.168.1.97 -r 10 -b "icons/ubuntu-logo.png"
+In this command we launch UFONet, and the -a flag specifies the target to attack. The -r flag specifies the number of times each host should attack. The -b option selects where to make requests on the target.
+
+
+
+
+When we execute this command, UFONet will attack the target 10 times for each zombie. If you have a list of 100 zombies, it would launch 100 zombies times 10 rounds for a total of 1,000 requests to the target. Specifically, it's requesting the largest file on the site "ubuntu-logo.png". That number may seem small, but remember with a bit of web scraping and peer-to-peer sharing, it should be easy enough to launch a respectable DDoS attack.
+
+
+In this case, I'm getting a target down message. Obviously, my target is still up. Since I'm attacking a local VM from within my own home network, sites like isup.me that check whether a website is up, will detect it as down.
+
+
+
+In this case, I'm getting a target down message. Obviously, my target is still up. Since I'm attacking a local VM from within my own home network, sites like isup.me that check whether a website is up, will detect it as down.
+
+Conclusion:
+UFONet is just one of many DDoS attack platforms. A search on GitHub or Google for botnets should turn up some interesting results. I would never run a botnet app without thoroughly reading through the source. Without an understanding of the code, it's quite possible that you could face criminal charges. If that weren't enough, running unknown applications from known malicious developers can compromise your system—turning your machine into a zombie or worse. Depending on your location, simply testing for open redirect vulnerabilities in remote machines could be illegal.
+
+
+
+
+
+
+
