@@ -12,7 +12,7 @@ dpkg -l | grep wget
 
 wget --version
 
-wget "https://https://drive.google.com/drive/u/0/folders/1VEsPdwtuCN5DXrbBOBsA7gS0AEBEgT6M"
+wget "https://drive.google.com/drive/folders/1fq-j4C2GWTSLAYO03ULsLphMops8n7Zd?usp=share_link"
 
 cd ufonet
 
